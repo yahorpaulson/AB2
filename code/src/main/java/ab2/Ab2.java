@@ -104,7 +104,7 @@ public interface Ab2 {
 	 * @param element das einzufügende Element (sicher größer als -1)
 	 *                the value to be added (always greater than -1)
 	 */
-	public void insertIntoHashSet(int[] hashtable, int element);
+	public void insertIntoHashSet(int[] hashtable, int element) throws Exception;
 
 	/**
 	 * Sucht ein Element in einem Array, welches eine Menge an
