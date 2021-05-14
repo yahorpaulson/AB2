@@ -1,8 +1,6 @@
-package ab2.impl.Nachnamen;
+package ab2.impl.Siarheyeu;
 
 import ab2.Ab2;
-
-import java.util.EmptyStackException;
 
 /**
  * Created by Yahor Siarheyeu
@@ -10,6 +8,8 @@ import java.util.EmptyStackException;
 
 public class Ab2Impl implements Ab2 {
 
+
+	private ListNode first;
 
 	/**
 	 * Method inserts an element to Stack
@@ -19,7 +19,7 @@ public class Ab2Impl implements Ab2 {
 	 *
 	 * @param element Das hinzuzufügende Element
 	 */
-	private ListNode first;
+
 
 	@Override
 	public void push(Stack stack, int element)
@@ -57,7 +57,7 @@ public class Ab2Impl implements Ab2 {
 			bound *= 2;
 		}
 		// do binary search with in the range
-		return binarySearch(data, bound/2, Integer.min(bound + 1, data.length), element);
+		return binarySearch(data, bound/2, Integer.min(bound + 1, data.length - 1), element);
 	}
 
 	private static int binarySearch(int[] arr, int start, int end, int searchElement){
@@ -88,7 +88,7 @@ public class Ab2Impl implements Ab2 {
 	 * @param element das einzufügende Element (sicher größer als -1)
 	 */
 	@Override
-	public void insertIntoHashSet(int[] hashtable, int element) throws Exception {
+	public void insertIntoHashSet(int[] hashtable, int element){
 		int attempts = 1;
 		int position = quadraticProbing(attempts, hashtable, element);
 		while (!tryAttempt(hashtable, position,element)){
@@ -109,7 +109,7 @@ public class Ab2Impl implements Ab2 {
 	 * @param element value of an element
 	 * @return true if the element was inserted into array and false if not
 	 */
-	private boolean tryAttempt(int [] hashTable, int position, int element) throws Exception {
+	private boolean tryAttempt(int [] hashTable, int position, int element) {
 		int counter = 1;
 		for (int i = 0; i < hashTable.length; i++) {
 			if(hashTable[i] != -1){
@@ -118,9 +118,6 @@ public class Ab2Impl implements Ab2 {
 			if((position == i) && (hashTable[i] == -1)){
 				hashTable[i] = element;
 				return true;
-			}
-			if (counter > hashTable.length){
-				throw new Exception("The hash table is full. Insertion is not possible...");
 			}
 		}
 		return false;
@@ -137,8 +134,7 @@ public class Ab2Impl implements Ab2 {
 	 */
 
 	private int quadraticProbing(int attempts, int [] hashTable, int element){
-		int position = hashFunktion(element, hashTable) + (int) ((Math.pow((attempts/2), 2)) * (Math.pow(-1,attempts)))%hashTable.length; //quadratic probing
-		return position;
+		return hashFunktion(element, hashTable) + (int) ((Math.pow((attempts/2), 2)) * (Math.pow(-1,attempts)))%hashTable.length;
 	}
 
 	/**
@@ -160,7 +156,7 @@ public class Ab2Impl implements Ab2 {
 	 * @param element das gesuchte Element (sicher größer als -1)
 	 *                the value to search for (always greater than -1)
 	 *
-	 * @return
+	 * @return true if elements is in the hash set
 	 */
 	@Override
 	public boolean containedInHashSet(int[] hashtable, int element)
@@ -168,8 +164,8 @@ public class Ab2Impl implements Ab2 {
 		if (element <= -1){
 			throw new IllegalArgumentException("Input element is negative...");
 		}
-		for(int i = 0; i < hashtable.length; i++){
-			if(element == hashtable[i]){
+		for (int j : hashtable) {
+			if (element == j) {
 				return true;
 			}
 		}

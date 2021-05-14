@@ -1,6 +1,6 @@
 package ab2;
 
-import ab2.impl.Nachnamen.Ab2Impl;
+import ab2.impl.Siarheyeu.Ab2Impl;
 import ab2.Ab2.Stack;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -40,10 +40,9 @@ public class Ab2Test {
 		int[] test = getRandomArray(ARRAY_SIZE_LARGE);
 		Stack stack = new Stack();
 
-		for(int i = 0; i < test.length; ++i)
-		{
-			ab2Impl.push(stack, test[i]);
-			assertEquals(test[i], ab2Impl.pop(stack));
+		for (int j : test) {
+			ab2Impl.push(stack, j);
+			assertEquals(j, ab2Impl.pop(stack));
 		}
 	}
 
@@ -53,8 +52,7 @@ public class Ab2Test {
 		int[] test = getRandomArray(ARRAY_SIZE_LARGE);
 		Stack stack = new Stack();
 
-		for(int i = 0; i < test.length; ++i)
-			ab2Impl.push(stack, test[i]);
+		for (int j : test) ab2Impl.push(stack, j);
 
 		for(int i = test.length - 1; i >= 0; --i)
 			assertEquals(test[i], ab2Impl.pop(stack));
@@ -85,8 +83,7 @@ public class Ab2Test {
 	}
 
 	@Test
-	public void testHashSet()
-	{
+	public void testHashSet() throws Exception {
 		int[] test = new int[HASHSET_SIZE]; 
 		HashSet<Integer> hashSetRef = new HashSet<>();
 		
@@ -106,8 +103,7 @@ public class Ab2Test {
 	}
 
 	@Test
-	public void testHashSetDuplicates()
-	{
+	public void testHashSetDuplicates() throws Exception {
 		int[] test = new int[HASHSET_SIZE]; 
 		HashSet<Integer> hashSetRef = new HashSet<>();
 		
@@ -132,8 +128,7 @@ public class Ab2Test {
 	}
 
 	@Test
-	public void testHashSetCollisions()
-	{
+	public void testHashSetCollisions() throws Exception {
 		int[] test = new int[HASHSET_SIZE]; 
 		HashSet<Integer> hashSetRef = new HashSet<>();
 		
