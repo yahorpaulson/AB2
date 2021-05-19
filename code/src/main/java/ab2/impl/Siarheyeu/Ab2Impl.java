@@ -5,12 +5,7 @@ import ab2.Ab2;
 /**
  * Created by Yahor Siarheyeu
  */
-
 public class Ab2Impl implements Ab2 {
-
-
-	private ListNode first;
-
 	/**
 	 * Method inserts an element to Stack
 	 *
@@ -19,15 +14,13 @@ public class Ab2Impl implements Ab2 {
 	 *
 	 * @param element Das hinzuzufügende Element
 	 */
-
-
 	@Override
 	public void push(Stack stack, int element)
 	{
-		ListNode oldFirst = first;
-		first = new ListNode();
+		ListNode first = new ListNode();
 		first.value = element;
-		first.next = oldFirst;
+		first.next = stack.head;
+		stack.head = first;
 	}
 
 	/**
@@ -38,14 +31,15 @@ public class Ab2Impl implements Ab2 {
 	 *
 	 * @return element that was removed
 	 */
-
 	@Override
 	public int pop(Stack stack)
 	{
-		int item = first.value;
-		first = first.next;
-
-		return item;
+		ListNode first = stack.head;
+		if(first == null) {
+			throw new RuntimeException("Empty stack");
+		}
+		stack.head = first.next;
+		return first.value;
 	}
 
 	@Override
@@ -60,7 +54,7 @@ public class Ab2Impl implements Ab2 {
 		return binarySearch(data, bound/2, Integer.min(bound + 1, data.length - 1), element);
 	}
 
-	private static int binarySearch(int[] arr, int start, int end, int searchElement){
+	static int binarySearch(int[] arr, int start, int end, int searchElement){
 		// exit condition
 		if(start > end){
 			return -1;
@@ -89,62 +83,51 @@ public class Ab2Impl implements Ab2 {
 	 */
 	@Override
 	public void insertIntoHashSet(int[] hashtable, int element){
-		int attempts = 1;
-		int position = quadraticProbing(attempts, hashtable, element);
-		while (!tryAttempt(hashtable, position,element)){
-			attempts++;
-			position = quadraticProbing(attempts, hashtable, element);
+		int position = findPosition(hashtable, element);
+		if(position != -1) {
+			hashtable[position] = element;
 		}
-
-
 	}
 
-	/**
-	 * Method goes to the concrete position and inserts the element if it's possible.
-	 *
-	 * !!! Throws an exception if array is already full !!!
-	 *
-	 * @param hashTable is represented by array
-	 * @param position where is element should be inserted
-	 * @param element value of an element
-	 * @return true if the element was inserted into array and false if not
-	 */
-	private boolean tryAttempt(int [] hashTable, int position, int element) {
-		int counter = 1;
-		for (int i = 0; i < hashTable.length; i++) {
-			if(hashTable[i] != -1){
-				counter++;
+	static int findPosition(int[] hashtable, int element) {
+		int size = hashtable.length;
+		int hash = hashFunction(element, size);
+		//int position = hash; //quadraticProbing(attempts, hashtable, element);
+		for(int j = 0, pos = hash; j < size; j++) {
+			if (hashtable[pos] == -1 || hashtable[pos] == element) {
+				return pos;
 			}
-			if((position == i) && (hashTable[i] == -1)){
-				hashTable[i] = element;
-				return true;
-			}
+			pos = quadraticProbing(j, hash, size);
 		}
-		return false;
+		return -1; // not found
 	}
 
 	/**
 	 * Method is used in case if the position where the element should be is already occupied.
 	 * then using quadratic probing is calculated a new position.
 	 *
-	 * @param attempts calculated the number of attempts
-	 * @param hashTable is represented as array
-	 * @param element value of an element
+	 * @param j attempts calculated the number of attempts
+	 * @param hash element's hash value
+	 * @param size size of the hashtable
 	 * @return new position of an element
 	 */
-
-	private int quadraticProbing(int attempts, int [] hashTable, int element){
-		return hashFunktion(element, hashTable) + (int) ((Math.pow((attempts/2), 2)) * (Math.pow(-1,attempts)))%hashTable.length;
+	static int quadraticProbing(int j, int hash, int size) {
+		int j2 = (j+1) / 2; // ⌈j/2⌉ = ceil(j/2)
+		int s = j2 * j2 * ((j & 1) == 1 ? -1 : 1); // ceil(j/2)^2 * (-1)^j
+		int r = (hash - s) % size;
+		if(r < 0)
+			r += size;
+		return r;
 	}
 
 	/**
-	 * Presentation of hash funktion which is MOD from the value of an element
+	 * Presentation of hash function which is MOD from the value of an element
 	 * @param element is the concrete element
-	 * @param hashTable input array
+	 * @param size hashtable size
 	 * @return value for calculating the position
 	 */
-	private int hashFunktion(int element, int [] hashTable){
-		return element % hashTable.length;
+	static int hashFunction(int element, int size){
+		return element % size;
 	}
 
 	/**
@@ -159,16 +142,8 @@ public class Ab2Impl implements Ab2 {
 	 * @return true if elements is in the hash set
 	 */
 	@Override
-	public boolean containedInHashSet(int[] hashtable, int element)
-	{
-		if (element <= -1){
-			throw new IllegalArgumentException("Input element is negative...");
-		}
-		for (int j : hashtable) {
-			if (element == j) {
-				return true;
-			}
-		}
-		return false;
+	public boolean containedInHashSet(int[] hashtable, int element)	{
+		int pos = findPosition(hashtable, element);
+		return pos != -1 && hashtable[pos] == element;
 	}
 }
