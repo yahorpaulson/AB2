@@ -1,4 +1,4 @@
-package ab2.impl.Siarheyeu;
+package ab2.impl.SiarheyeuKuparIsmailov;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,5 +21,13 @@ class Ab2ImplTest {
             int h = Ab2Impl.quadraticProbing(j, 5, m8.length);
             assertEquals(m8[j], h, "j=" + j + " expected " + m8[j] + " but was " +h);
         }
+    }
+
+    @Test
+    void binary() {
+        int[] a = {1,2,3,4,5};
+        assertEquals(0, Ab2Impl.binary(a, 1, 0, a.length+1));
+        assertEquals(1, Ab2Impl.binary(a, 2, 0, a.length+1));
+        assertEquals(2, Ab2Impl.binary(a, 3, 0, a.length+1));
     }
 }
